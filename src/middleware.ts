@@ -1,0 +1,17 @@
+import { NextFunction, Request, Response } from "express"
+import jwt from "jsonwebtoken"
+const JWT_PASSWORD = "ilovewebd"
+export const userMiddleware = (req:Request,res:Response,next:NextFunction)=>{
+    const header = req.headers["Authorization"];
+    const decoded = jwt.verify(header as string , JWT_PASSWORD)
+    if(decoded){
+        //@ts-ignore
+        req.userId = decoded.id
+        next();
+    }
+    else{
+        res.status(403).json({
+            msg:"you are not logged in "
+        })
+    }
+}
